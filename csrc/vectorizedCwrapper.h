@@ -1,5 +1,7 @@
 // For creating dll's that allow interlanguage linking, see:
 // http://www.mingw.org/wiki/sampleDLL
+// /c/program Files/Java/jdk1.8.0_05/bin/javac.exe
+// /c/program Files/Java/jdk1.8.0_05/include/jni.h
 
 #ifdef __cplusplus
 extern "C" {

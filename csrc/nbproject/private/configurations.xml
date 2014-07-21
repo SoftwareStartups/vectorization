@@ -5,9 +5,11 @@
       <in>Vectorized.cc</in>
       <in>Vectorized.h</in>
       <in>VectorizedImpl.cc</in>
+      <in>com_vectorfabrics_vectorizeLib.h</in>
       <in>main.c</in>
       <in>vectorizedCwrapper.cc</in>
       <in>vectorizedCwrapper.h</in>
+      <in>vectorizedJNIwrapper.cc</in>
     </df>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
