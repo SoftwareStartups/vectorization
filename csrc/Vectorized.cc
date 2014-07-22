@@ -5,7 +5,9 @@
 #include "Vectorized.h"
 
 VectorizedFactory::VectorizedFactory() : bestOffer(0), bestCandidate(NULL) {
+#ifdef DEBUG
     std::cout << "Factory constructed" << std::endl;
+#endif
 }
 
 // The enclosed singleton object ensures that its constructor is invoked for initialization,
@@ -19,7 +21,9 @@ VectorizedFactory& VectorizedFactory::single() {
 void VectorizedFactory::registr(unsigned int priority, Vectorized* vectorizeCandidate) {
     VectorizedFactory& vf = single();
 
+#ifdef DEBUG
     std::cout << "register: " << priority << std::endl;
+#endif
     if (priority > vf.bestOffer || !vf.bestCandidate) {
         vf.bestOffer = priority;
         vf.bestCandidate = vectorizeCandidate;
@@ -65,7 +69,9 @@ Vectorized::haveSimdType(const char* simdTypeName) {
         int cpuInfo[4];
         __cpuid(cpuInfo, 0);
 
+#ifdef DEBUG
         std::cout << "haveSimdType?" << simdTypeName << std::endl;
+#endif
 
         int nIds = cpuInfo[0];
         if (!strcmp(simdTypeName, "sse2") || nIds < 1)
@@ -86,7 +92,9 @@ Vectorized::haveSimdType(const char* simdTypeName) {
         bool osUsesXSAVE_XRSTORE = cpuInfo[2] & (1 << 27) || false;
         bool cpuAVXSuport = cpuInfo[2] & (1 << 28) || false;
 
+#ifdef DEBUG
         std::cout << "check avx: osSaverestore=" << osUsesXSAVE_XRSTORE << ", cpuAVX=" << cpuAVXSuport << std::endl;
+#endif
  
         if (osUsesXSAVE_XRSTORE && cpuAVXSuport)
         {
@@ -94,11 +102,14 @@ Vectorized::haveSimdType(const char* simdTypeName) {
             // Note that 'xgetbv' is an instruction that is available in avx-capable CPUs only
             unsigned long long xcrFeatureMask = _xgetbv(0);
             bool avxSupported = (xcrFeatureMask & 0x6) || false;
+            
+#ifdef DEBUG
             std::cout << "   check avx: _xgetbv=" << avxSupported << std::endl;
+#endif
 
-            if (!strcmp(simdTypeName, "avx"))
+            if (avxSupported && !strcmp(simdTypeName, "avx"))
                 return true;
-            if (!strcmp(simdTypeName, "avx2") && nIds >= 7) {
+            if (avxSupported && !strcmp(simdTypeName, "avx2") && nIds >= 7) {
                 __cpuid(cpuInfo, 7);
                 return (cpuInfo[1] & (1 << 5)) != 0;
             }
